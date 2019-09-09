@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Danganronpa_Another_Tool
 {
@@ -2234,7 +2235,14 @@ namespace Danganronpa_Another_Tool
         private bool ConvertFromTGAToPNG(string Image, string DestinationDir)
         {
             string CodeLine = "convert \"" + Image + "\" -alpha Background -quality 100 \"" + Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(Image)) + ".png\"";
-            return UseEXEToConvert($"Ext{Path.DirectorySeparatorChar}convert.exe", CodeLine);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return UseEXEToConvert($"Ext{Path.DirectorySeparatorChar}convert.exe", CodeLine);
+            }
+            else
+            {
+                return UseEXEToConvert($"Ext{Path.DirectorySeparatorChar}convert", CodeLine);
+            }
         }
 
         private bool ConvertFromTGAToGXT(string Image, string DestinationDir)
